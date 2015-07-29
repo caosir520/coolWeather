@@ -22,20 +22,28 @@ public class CoolWeatherDB {
 	private static CoolWeatherDB coolWeatherDB;
 	
 	private SQLiteDatabase db ;
+	
 	/*吧构造方法私有化   */
-	private CoolWeatherDB(Context context){
-		CoolWeatherOpenHelper dbHelper = new CoolWeatherOpenHelper(context,DB_NAME, null,VERSION);
+	private CoolWeatherDB(Context context) {
+		CoolWeatherOpenHelper dbHelper = new CoolWeatherOpenHelper(context,
+				DB_NAME, null, VERSION);
 		db = dbHelper.getWritableDatabase();
 	}
 	/*
 	 * 获取CoolWeatherDB的实例*/
-	public synchronized static CoolWeatherDB getInstance(Context context){
-		if (coolWeatherDB==null){
-			coolWeatherDB=new CoolWeatherDB(context);
+	
+	/*public synchronized static CoolWeatherDB getInstance(Context context) {
+		if (coolWeatherDB == null) {
+			coolWeatherDB = new CoolWeatherDB(context);
+			}
+		return coolWeatherDB;
+	}*/
+	public synchronized static CoolWeatherDB getInstance(Context context) {
+		if (coolWeatherDB == null) {
+			coolWeatherDB = new CoolWeatherDB(context);
 		}
 		return coolWeatherDB;
 	}
-	
 	/*
 	 * 将Province 实例存到数据库*/
 	public void saveProvince (Province pr){
@@ -51,12 +59,12 @@ public class CoolWeatherDB {
 	 **/
 	public List<Province> loadProvince(){
 		List <Province> list =new ArrayList<Province>();
-		Cursor cursor = db.
-				query("Province",null, null, null, null, null, null);
+		Cursor cursor = db
+				.query("Province",null, null, null, null, null, null);
 		if (cursor.moveToFirst()){
 			do{
 				Province province =new Province();
-				province.setId(cursor.getColumnIndex("id"));
+				province.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				province.setProvinceName(cursor.getString(cursor.getColumnIndex("province_name")));
 				province.setProvinceCode(cursor.getString(cursor.getColumnIndex("province_code")));
 				list.add(province);
@@ -86,9 +94,9 @@ public class CoolWeatherDB {
 				City city = new City();
 				city.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				city.setCityName(cursor.getString(cursor
-				.getColumnIndex("city_name")));
+						.getColumnIndex("city_name")));
 				city.setCityCode(cursor.getString(cursor
-				.getColumnIndex("city_code")));
+						.getColumnIndex("city_code")));
 				city.setProvinceId(provinceId);
 				list.add(city);
 			}while (cursor.moveToNext());
